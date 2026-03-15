@@ -1,196 +1,121 @@
-Here's an updated version of the instructions with clear steps for setting variables:
+# Lesson 3: Creating and Configuring Azure Virtual Machines
 
-### **Creating and Configuring Virtual Machines on Azure**
-
-## **1. Creating a Windows Server VM**
-
-### **Using Azure Portal:**
-
-(Follow the steps as provided earlier in the **Using Azure Portal** section.)
-
----
-
-### **Using Azure CloudShell:**
-
-1. **Open CloudShell:**
-   - In the Azure Portal, click on the **CloudShell** icon at the top right.
-
-2. **Set Variables for VM Creation:**
-   - Before creating the VM, set up variables in CloudShell for easy reference:
-     ```bash
-     RESOURCE_GROUP="myResourceGroup"          # Name of the resource group
-     VM_NAME="myWindowsVM"                     # Name of the virtual machine
-     LOCATION="eastus"                         # Azure region to deploy the VM
-     ADMIN_USERNAME="azureuser"                # Administrator username for the VM
-     ```
-   - These variables help streamline commands and ensure consistency across operations.
-
-3. **Create Resource Group:**
-   ```bash
-   az group create --name $RESOURCE_GROUP --location $LOCATION
-   ```
-
-4. **Create Windows VM:**
-   ```bash
-   az vm create \
-     --resource-group $RESOURCE_GROUP \
-     --name $VM_NAME \
-     --image Win2022Datacenter \
-     --admin-username $ADMIN_USERNAME \
-     --admin-password "YourPasswordHere" \
-     --size Standard_B1ms
-   ```
-
-5. **Open RDP Port:**
-   ```bash
-   az vm open-port --port 3389 --resource-group $RESOURCE_GROUP --name $VM_NAME
-   ```
-
-6. **Connect via RDP:**
-   - Download the RDP file from the Azure Portal and connect using the credentials provided.
+## Learning goals
+By the end of this lesson, you can:
+- Create Windows and Linux VMs in Azure.
+- Open only required network ports.
+- Connect securely (RDP for Windows, SSH for Linux).
+- Apply VM best practices for security and cost.
 
 ---
 
-### **Using Azure CLI:**
-
-1. **Login to Azure CLI:**
-   ```bash
-   az login
-   ```
-
-2. **Set Variables for VM Creation:**
-   - Set up variables in your shell environment:
-     ```bash
-     RESOURCE_GROUP="myResourceGroup"          # Name of the resource group
-     VM_NAME="myWindowsVM"                     # Name of the virtual machine
-     LOCATION="eastus"                         # Azure region to deploy the VM
-     ADMIN_USERNAME="azureuser"                # Administrator username for the VM
-     ```
-   - These variables allow you to quickly reference values in subsequent commands.
-
-3. **Create Resource Group:**
-   ```bash
-   az group create --name $RESOURCE_GROUP --location $LOCATION
-   ```
-
-4. **Create Windows VM:**
-   ```bash
-   az vm create \
-     --resource-group $RESOURCE_GROUP \
-     --name $VM_NAME \
-     --image Win2022Datacenter \
-     --admin-username $ADMIN_USERNAME \
-     --admin-password "YourPasswordHere" \
-     --size Standard_B1ms
-   ```
-
-5. **Open RDP Port:**
-   ```bash
-   az vm open-port --port 3389 --resource-group $RESOURCE_GROUP --name $VM_NAME
-   ```
-
-6. **Connect via RDP:**
-   - Use the Azure Portal to download the RDP file and connect.
+## Prerequisites
+- Azure account and selected subscription.
+- Existing resource group or permission to create one.
+- Azure CLI installed (or Cloud Shell access).
 
 ---
 
-## **2. Creating a Linux VM (Ubuntu)**
+## Variables (reuse for both examples)
+```bash
+RESOURCE_GROUP="rg-vm-lab-dev"
+LOCATION="eastus"
+ADMIN_USERNAME="azureuser"
+```
 
-### **Using Azure Portal:**
-
-(Follow the steps as provided earlier in the **Using Azure Portal** section.)
-
----
-
-### **Using Azure CloudShell:**
-
-1. **Open CloudShell:**
-   - Click on the **CloudShell** icon in the Azure Portal.
-
-2. **Set Variables for VM Creation:**
-   - Set up variables in CloudShell:
-     ```bash
-     RESOURCE_GROUP="myResourceGroup"          # Name of the resource group
-     VM_NAME="myLinuxVM"                       # Name of the virtual machine
-     LOCATION="eastus"                         # Azure region to deploy the VM
-     ADMIN_USERNAME="azureuser"                # Administrator username for the VM
-     ```
-   - These variables help streamline your commands and ensure consistency.
-
-3. **Create Resource Group:**
-   ```bash
-   az group create --name $RESOURCE_GROUP --location $LOCATION
-   ```
-
-4. **Create Linux VM:**
-   ```bash
-   az vm create \
-     --resource-group $RESOURCE_GROUP \
-     --name $VM_NAME \
-     --image UbuntuLTS \
-     --admin-username $ADMIN_USERNAME \
-     --generate-ssh-keys \
-     --size Standard_B1ms
-   ```
-
-5. **Open SSH Port:**
-   ```bash
-   az vm open-port --port 22 --resource-group $RESOURCE_GROUP --name $VM_NAME
-   ```
-
-6. **Connect via SSH:**
-   - Use the public IP to connect:
-     ```bash
-     ssh azureuser@<YourPublicIP>
-     ```
+Create resource group:
+```bash
+az group create --name "$RESOURCE_GROUP" --location "$LOCATION" --tags Environment=Dev Project=VMLab
+```
 
 ---
 
-### **Using Azure CLI:**
+## Part A: Linux VM (recommended first)
 
-1. **Login to Azure CLI:**
-   ```bash
-   az login
-   ```
+### Create Linux VM
+```bash
+LINUX_VM_NAME="vm-linux-dev"
 
-2. **Set Variables for VM Creation:**
-   - Set up variables in your shell environment:
-     ```bash
-     RESOURCE_GROUP="myResourceGroup"          # Name of the resource group
-     VM_NAME="myLinuxVM"                       # Name of the virtual machine
-     LOCATION="eastus"                         # Azure region to deploy the VM
-     ADMIN_USERNAME="azureuser"                # Administrator username for the VM
-     ```
-   - These variables will be used throughout the VM creation process.
+az vm create \
+  --resource-group "$RESOURCE_GROUP" \
+  --name "$LINUX_VM_NAME" \
+  --image Ubuntu2204 \
+  --admin-username "$ADMIN_USERNAME" \
+  --generate-ssh-keys \
+  --size Standard_B1s
+```
 
-3. **Create Resource Group:**
-   ```bash
-   az group create --name $RESOURCE_GROUP --location $LOCATION
-   ```
+### Open SSH port (22)
+```bash
+az vm open-port --resource-group "$RESOURCE_GROUP" --name "$LINUX_VM_NAME" --port 22
+```
 
-4. **Create Linux VM:**
-   ```bash
-   az vm create \
-     --resource-group $RESOURCE_GROUP \
-     --name $VM_NAME \
-     --image UbuntuLTS \
-     --admin-username $ADMIN_USERNAME \
-     --generate-ssh-keys \
-     --size Standard_B1ms
-   ```
-
-5. **Open SSH Port:**
-   ```bash
-   az vm open-port --port 22 --resource-group $RESOURCE_GROUP --name $VM_NAME
-   ```
-
-6. **Connect via SSH:**
-   - Use the Azure CLI to retrieve the public IP and connect:
-     ```bash
-     ssh azureuser@<YourPublicIP>
-     ```
+### Connect via SSH
+```bash
+PUBLIC_IP=$(az vm show -d --resource-group "$RESOURCE_GROUP" --name "$LINUX_VM_NAME" --query publicIps -o tsv)
+ssh "$ADMIN_USERNAME@$PUBLIC_IP"
+```
 
 ---
 
-### **Summary**
-These instructions now include clear steps for setting variables in both CloudShell and Azure CLI. This approach helps streamline the process, making it easier to manage and modify your virtual machine settings.
+## Part B: Windows Server VM
+
+### Create Windows VM
+```bash
+WINDOWS_VM_NAME="vm-win-dev"
+
+az vm create \
+  --resource-group "$RESOURCE_GROUP" \
+  --name "$WINDOWS_VM_NAME" \
+  --image Win2022Datacenter \
+  --admin-username "$ADMIN_USERNAME" \
+  --admin-password "<Choose-A-Strong-Password>" \
+  --size Standard_B2s
+```
+
+### Open RDP port (3389)
+```bash
+az vm open-port --resource-group "$RESOURCE_GROUP" --name "$WINDOWS_VM_NAME" --port 3389
+```
+
+### Get public IP for RDP
+```bash
+az vm show -d --resource-group "$RESOURCE_GROUP" --name "$WINDOWS_VM_NAME" --query publicIps -o tsv
+```
+Then connect with Remote Desktop.
+
+---
+
+## Portal equivalent (quick steps)
+1. Go to **Virtual machines** → **Create**.
+2. Select subscription, resource group, VM name, region, image, size.
+3. Set admin auth (SSH for Linux; strong password for Windows).
+4. Allow only required inbound ports.
+5. Review and create.
+
+---
+
+## VM best practices
+- Prefer SSH keys for Linux; avoid password auth where possible.
+- Restrict inbound ports by source IP in NSG rules.
+- Use small VM sizes for labs.
+- Stop/deallocate VMs when not in use to reduce cost.
+- Use Azure Backup or snapshots for important data.
+
+---
+
+## Cost-saving commands
+```bash
+# Stop and deallocate VM
+az vm deallocate --resource-group "$RESOURCE_GROUP" --name "$LINUX_VM_NAME"
+
+# Start VM again
+az vm start --resource-group "$RESOURCE_GROUP" --name "$LINUX_VM_NAME"
+```
+
+---
+
+## Cleanup
+```bash
+az group delete --name "$RESOURCE_GROUP" --yes --no-wait
+```

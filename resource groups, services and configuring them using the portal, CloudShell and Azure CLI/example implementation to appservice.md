@@ -1,108 +1,110 @@
-### **10. Example Implementations to Azure App Service: WordPress and ASP.NET Applications**
+# Lesson 4: Azure App Service Implementations (WordPress and ASP.NET)
 
-In this section, students will learn how to implement and deploy real-world applications, such as WordPress and ASP.NET applications, on Azure App Service. These examples will demonstrate the versatility of Azure App Service in hosting both open-source platforms and custom-built applications.
-
-#### **1. Deploying a WordPress Application on Azure App Service**
-WordPress is a popular open-source content management system (CMS) used for building websites and blogs. Deploying WordPress on Azure App Service provides a scalable, secure, and fully managed environment for running WordPress websites.
-
-- **Steps to Deploy WordPress:**
-
-  - **Step 1: Create an Azure App Service Plan:**
-    - Navigate to the Azure Portal.
-    - Create a new App Service plan by specifying the subscription, resource group, name, region, and pricing tier (e.g., Standard or Premium for production environments).
-  
-  - **Step 2: Set Up a MySQL Database:**
-    - In the Azure Portal, create an Azure Database for MySQL.
-    - Configure the MySQL server with appropriate settings (version, compute, storage).
-    - Note the connection details (server name, username, password) for later use.
-  
-  - **Step 3: Deploy WordPress:**
-    - Go to the Azure Marketplace and search for "WordPress."
-    - Select the WordPress offering and click "Create."
-    - Choose the App Service plan created earlier and link it to the MySQL database.
-    - Configure the application settings, such as WordPress site title, admin username, and password.
-  
-  - **Step 4: Configure WordPress:**
-    - Once the deployment is complete, navigate to the WordPress site using the provided URL.
-    - Complete the WordPress installation by entering the MySQL connection details and finalizing the site setup.
-  
-  - **Step 5: Manage and Scale:**
-    - Use the Azure Portal to monitor the performance and health of the WordPress application.
-    - Configure auto-scaling based on traffic to handle spikes in user activity.
-    - Set up custom domains and SSL certificates for secure, branded access to the WordPress site.
-
-- **Benefits of Hosting WordPress on Azure:**
-  - **Scalability:** Automatically scale your WordPress site to handle increasing traffic.
-  - **Security:** Benefit from Azure’s built-in security features, including DDoS protection and managed firewalls.
-  - **High Availability:** Deploy WordPress across multiple regions to ensure uptime and redundancy.
-
-#### **2. Deploying an ASP.NET Application on Azure App Service**
-ASP.NET is a framework developed by Microsoft for building modern web applications and services. Deploying an ASP.NET application on Azure App Service leverages the platform's integration with the .NET ecosystem, providing a seamless development and deployment experience.
-
-- **Steps to Deploy an ASP.NET Application:**
-
-  - **Step 1: Create a New ASP.NET Project:**
-    - Open Visual Studio and create a new ASP.NET Core Web Application project.
-    - Choose a template (e.g., MVC, Web API) and configure the project settings.
-    - Build and run the application locally to ensure it works as expected.
-
-  - **Step 2: Publish to Azure App Service:**
-    - In Visual Studio, right-click on the project and select "Publish."
-    - Choose "Azure" as the deployment target and select "Azure App Service (Windows)."
-    - Sign in to your Azure account and create a new App Service instance or select an existing one.
-    - Configure the App Service settings, such as the App Service plan, resource group, and region.
-    - Click "Publish" to deploy the ASP.NET application to Azure App Service.
-
-  - **Step 3: Configure Application Settings:**
-    - In the Azure Portal, navigate to the deployed App Service.
-    - Configure any necessary application settings (e.g., connection strings, environment variables).
-    - Set up custom domains and SSL certificates if required.
-
-  - **Step 4: Monitor and Scale:**
-    - Use Azure Monitor and Application Insights to track the performance, errors, and user interactions with the application.
-    - Configure auto-scaling rules to ensure the application can handle varying loads efficiently.
-    - Set up alerts to notify you of any critical issues or performance degradation.
-
-- **Benefits of Hosting ASP.NET Applications on Azure:**
-  - **Seamless Integration:** Azure App Service integrates seamlessly with the .NET ecosystem, including Visual Studio, Azure DevOps, and Azure SQL Database.
-  - **Continuous Deployment:** Set up CI/CD pipelines to automatically deploy changes from your source control (e.g., GitHub, Azure Repos) to Azure App Service.
-  - **Comprehensive Monitoring:** Use Azure Monitor and Application Insights to gain deep insights into application performance and user behavior.
-
-#### **3. Comparing WordPress and ASP.NET Deployments on Azure**
-While both WordPress and ASP.NET applications can be hosted on Azure App Service, the deployment process and considerations differ:
-
-- **WordPress:**
-  - **Best For:** Content management, blogging, and websites that require a CMS.
-  - **Deployment:** Involves configuring a MySQL database and setting up the WordPress application through the Azure Marketplace.
-  - **Customization:** Highly customizable with plugins and themes, but requires ongoing maintenance.
-
-- **ASP.NET:**
-  - **Best For:** Custom web applications, APIs, and services built on the .NET framework.
-  - **Deployment:** Direct integration with Visual Studio for seamless publishing and deployment.
-  - **Flexibility:** Offers more control over application architecture, data access, and security.
-
-#### **4. Best Practices for Deploying on Azure App Service**
-To ensure successful deployments and optimal performance of WordPress and ASP.NET applications on Azure App Service:
-
-- **Security:**
-  - Use managed identities to securely access Azure resources.
-  - Enable HTTPS and configure SSL certificates for secure communication.
-  - Regularly update the application and dependencies to mitigate vulnerabilities.
-
-- **Performance:**
-  - Use Azure Content Delivery Network (CDN) to cache and deliver static content more efficiently.
-  - Optimize application code and database queries to reduce latency and improve response times.
-  - Implement caching strategies (e.g., Redis Cache) to offload frequent requests from the database.
-
-- **Scaling:**
-  - Configure auto-scaling rules to automatically adjust the number of instances based on traffic and load.
-  - Monitor application performance using Azure Monitor and Application Insights to identify and address bottlenecks.
-
-- **Maintenance:**
-  - Regularly back up the application and database to prevent data loss.
-  - Use staging slots in Azure App Service for testing updates before deploying to production.
-  - Set up automated alerts for critical events, such as downtime or performance degradation.
+## Learning goals
+By the end of this lesson, you will:
+- Understand App Service fundamentals.
+- Deploy a WordPress-style CMS workload.
+- Deploy an ASP.NET app.
+- Apply production-minded best practices (security, scaling, monitoring).
 
 ---
 
-These detailed examples of deploying WordPress and ASP.NET applications on Azure App Service provide students with practical insights into using Azure for real-world web application hosting, highlighting the platform's versatility, scalability, and ease of use.
+## What is Azure App Service?
+Azure App Service is a managed platform for web apps and APIs. Azure handles underlying OS patching, scaling options, and platform operations so you can focus on app code and configuration.
+
+---
+
+## Option A: WordPress-style deployment pattern
+
+> Note: Azure Marketplace offerings can change over time. Always follow the latest portal prompts.
+
+### Recommended architecture
+- App Service Plan
+- Web App
+- Managed database (Azure Database for MySQL - Flexible Server)
+- Optional: Azure Cache for Redis, CDN, custom domain + TLS
+
+### High-level steps
+1. Create resource group: `rg-web-dev`.
+2. Create App Service Plan (Linux, Basic/Standard for labs).
+3. Create MySQL Flexible Server.
+4. Deploy WordPress app (Marketplace/template workflow).
+5. Configure DB connection settings in app configuration.
+6. Enable HTTPS-only and custom domain if needed.
+
+### Key best practices
+- Use private networking where possible for database access.
+- Store secrets in Azure Key Vault (or App Settings with restricted access).
+- Enable automatic backups and test restore.
+- Keep WordPress/plugins/themes updated.
+
+---
+
+## Option B: ASP.NET deployment pattern
+
+### From Visual Studio / CLI pipeline
+1. Build and test application locally.
+2. Create App Service Plan + Web App (Windows or Linux based on runtime).
+3. Publish app using Visual Studio, GitHub Actions, or Azure DevOps.
+4. Set environment variables/connection strings in App Service configuration.
+5. Enable Application Insights for monitoring.
+
+### Example CLI app creation
+```bash
+RESOURCE_GROUP="rg-dotnet-dev"
+LOCATION="eastus"
+PLAN_NAME="asp-dotnet-dev-plan"
+WEBAPP_NAME="dotnetapp$RANDOM"
+
+az group create --name "$RESOURCE_GROUP" --location "$LOCATION"
+
+az appservice plan create \
+  --name "$PLAN_NAME" \
+  --resource-group "$RESOURCE_GROUP" \
+  --sku B1 \
+  --is-linux
+
+az webapp create \
+  --resource-group "$RESOURCE_GROUP" \
+  --plan "$PLAN_NAME" \
+  --name "$WEBAPP_NAME" \
+  --runtime "DOTNETCORE:8.0"
+```
+
+---
+
+## Shared best practices for App Service
+
+### Security
+- Enforce HTTPS-only.
+- Use managed identity for Azure service access.
+- Restrict SCM/Kudu access and deployment credentials.
+
+### Reliability
+- Use deployment slots (staging → production swap).
+- Turn on health checks.
+- Configure backup schedules and retention.
+
+### Performance and scale
+- Start with small SKU, monitor, then scale up/out.
+- Use autoscale rules for predictable traffic patterns.
+- Add caching and CDN for static content heavy apps.
+
+### Observability
+- Enable Application Insights.
+- Create alerts for 5xx rate, response time, and CPU/memory.
+- Review logs regularly after deployments.
+
+---
+
+## WordPress vs ASP.NET (quick comparison)
+- **WordPress**: Fast to launch content sites; plugin ecosystem; ongoing maintenance needed.
+- **ASP.NET**: Better for custom business logic and APIs; stronger control over architecture.
+
+---
+
+## Cleanup
+```bash
+az group delete --name "rg-web-dev" --yes --no-wait
+az group delete --name "rg-dotnet-dev" --yes --no-wait
+```
