@@ -4,7 +4,15 @@ set -euo pipefail
 ROOT_DIR="$(cd "$(dirname "$0")/.." && pwd)"
 cd "$ROOT_DIR"
 
-python - <<'PY'
+PYTHON_BIN=""
+if command -v python3 >/dev/null 2>&1; then
+  PYTHON_BIN="python3"
+elif command -v python >/dev/null 2>&1; then
+  PYTHON_BIN="python"
+fi
+
+if [[ -n "$PYTHON_BIN" ]]; then
+  "$PYTHON_BIN" - <<'PY'
 from pathlib import Path
 import re, subprocess, tempfile, sys
 
@@ -31,6 +39,9 @@ if failures:
 
 print('[RESULT] Markdown bash snippets are syntactically valid.')
 PY
+else
+  echo "[WARN] Python 3 not found. Skipping Markdown snippet syntax validation."
+fi
 
 if command -v az >/dev/null 2>&1; then
   echo "[INFO] Azure CLI found."

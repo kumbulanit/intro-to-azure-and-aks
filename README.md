@@ -1,6 +1,8 @@
 # Intro to Azure and AKS (Beginner-Friendly)
 
-Welcome! This repository is a practical, layman-friendly learning path for understanding **Microsoft Azure fundamentals** and preparing for **Azure Kubernetes Service (AKS)** concepts.
+Welcome! This repository is a practical, layman-friendly learning path for understanding **Microsoft Azure fundamentals** and building the Azure skills you need before starting **Azure Kubernetes Service (AKS)**.
+
+> Scope note: the current lessons focus on Azure foundations, resource management, virtual machines, and App Service. A hands-on AKS lesson is not included yet.
 
 If cloud feels overwhelming, this guide is designed for you: clear language, step-by-step flow, and practical best practices that help you avoid common beginner mistakes.
 
@@ -28,6 +30,7 @@ By following the lessons in this repository, you will learn how to:
   - **Azure CLI** (local terminal)
 - Create and configure **Windows and Linux virtual machines**.
 - Understand practical deployment approaches for **Azure App Service** (WordPress and ASP.NET examples).
+- Build the Azure foundation you need before moving into AKS topics.
 - Apply real-world best practices for security, cost, and operations.
 
 ---

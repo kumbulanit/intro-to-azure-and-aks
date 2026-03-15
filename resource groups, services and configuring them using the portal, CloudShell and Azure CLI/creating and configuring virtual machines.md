@@ -50,6 +50,8 @@ az vm create \
 az vm open-port --resource-group "$RESOURCE_GROUP" --name "$LINUX_VM_NAME" --port 22
 ```
 
+> Safety note: `az vm open-port` creates an internet-facing NSG rule. Use it only for quick lab access, then restrict the source IP in the VM's **Networking** settings.
+
 ### Connect via SSH
 ```bash
 PUBLIC_IP=$(az vm show -d --resource-group "$RESOURCE_GROUP" --name "$LINUX_VM_NAME" --query publicIps -o tsv)
@@ -63,15 +65,21 @@ ssh "$ADMIN_USERNAME@$PUBLIC_IP"
 ### Create Windows VM
 ```bash
 WINDOWS_VM_NAME="vm-win-dev"
+read -s -p "Enter a strong password for the Windows VM: " WINDOWS_ADMIN_PASSWORD
+echo
 
 az vm create \
   --resource-group "$RESOURCE_GROUP" \
   --name "$WINDOWS_VM_NAME" \
   --image Win2022Datacenter \
   --admin-username "$ADMIN_USERNAME" \
-  --admin-password "<Choose-A-Strong-Password>" \
+  --admin-password "$WINDOWS_ADMIN_PASSWORD" \
   --size Standard_B2s
+
+unset WINDOWS_ADMIN_PASSWORD
 ```
+
+Use a strong password that meets Azure's Windows VM complexity rules.
 
 ### Open RDP port (3389)
 ```bash

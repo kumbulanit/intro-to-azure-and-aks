@@ -77,6 +77,11 @@ If you have only one subscription, `az login` may be enough.
 ## Step 5: Configure safe defaults (recommended)
 ```bash
 az configure --defaults location=eastus
+```
+
+After you create your first resource group in Lesson 2, you can optionally set a default group:
+
+```bash
 az configure --defaults group=rg-azure-lab-dev
 ```
 

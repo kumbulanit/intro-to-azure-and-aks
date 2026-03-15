@@ -64,6 +64,8 @@ az storage container create \
   --account-key "$ACCOUNT_KEY"
 ```
 
+> Lab note: this example uses an account key so it works even before blob data roles are assigned. In real projects, prefer Microsoft Entra auth (`--auth-mode login`) or managed identities instead of long-lived account keys.
+
 ---
 
 ## What students should observe

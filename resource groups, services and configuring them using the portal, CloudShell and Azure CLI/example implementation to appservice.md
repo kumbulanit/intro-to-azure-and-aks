@@ -42,34 +42,38 @@ Azure App Service is a managed platform for web apps and APIs. Azure handles und
 
 ## Option B: ASP.NET deployment pattern
 
-### From Visual Studio / CLI pipeline
-1. Build and test application locally.
-2. Create App Service Plan + Web App (Windows or Linux based on runtime).
-3. Publish app using Visual Studio, GitHub Actions, or Azure DevOps.
-4. Set environment variables/connection strings in App Service configuration.
+### Beginner-friendly flow
+1. Create or open an ASP.NET app locally.
+2. Build it locally first so you know the app is in a healthy state before you deploy it.
+3. From the app folder, use `az webapp up` to create the App Service resources and deploy in one step.
+4. Put app settings and connection strings in App Service configuration, not in source control.
 5. Enable Application Insights for monitoring.
 
-### Example CLI app creation
+If you already have an ASP.NET app, skip the `dotnet new` step and run the deployment command from your existing project folder.
+
+### Example beginner deployment with Azure CLI
 ```bash
 RESOURCE_GROUP="rg-dotnet-dev"
 LOCATION="eastus"
-PLAN_NAME="asp-dotnet-dev-plan"
 WEBAPP_NAME="dotnetapp$RANDOM"
 
 az group create --name "$RESOURCE_GROUP" --location "$LOCATION"
 
-az appservice plan create \
-  --name "$PLAN_NAME" \
-  --resource-group "$RESOURCE_GROUP" \
-  --sku B1 \
-  --is-linux
+dotnet new webapp -n BeginnerWebApp
+cd BeginnerWebApp
+dotnet build
 
-az webapp create \
+az webapp up \
+  --sku F1 \
   --resource-group "$RESOURCE_GROUP" \
-  --plan "$PLAN_NAME" \
   --name "$WEBAPP_NAME" \
-  --runtime "DOTNETCORE:8.0"
+  --location "$LOCATION" \
+  --os-type Linux
 ```
+
+`az webapp up` is beginner-friendly because it creates the App Service resources and deploys the app in one workflow. When the command finishes, open the URL it prints to confirm the site is live.
+
+If you want to test locally before deploying, run `dotnet run`, open the local URL, then stop the app and continue with `az webapp up`.
 
 ---
 
